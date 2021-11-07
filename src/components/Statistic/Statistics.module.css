@@ -1,0 +1,25 @@
+.statList {
+  list-style: none;
+}
+.text {
+  font-weight: 600;
+  margin: 0;
+}
+
+.value {
+  color: #a32a2a;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.low {
+  font-weight: 600;
+  margin-left: 5px;
+  color: red;
+}
+
+.high {
+  font-weight: 600;
+  margin-left: 5px;
+  color: green;
+}
