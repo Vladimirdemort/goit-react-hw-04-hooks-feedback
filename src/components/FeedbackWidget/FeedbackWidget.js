@@ -1,67 +1,71 @@
 import React from "react";
+import { useState } from "react";
+
 import FeedbackOptions from "../Feedback/FeedbackOptions";
 import Section from "../Section/Section";
 import Statistics from "../Statistic/Statistics";
 import Notification from "../Notification/Notification";
 
-class FeedbackWidget extends React.Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-    total: 0,
-    positivePercentage: 0,
-  };
+function FeedbackWidget() {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [positivePercentage, setPositivePercentage] = useState(0);
 
-  onLeaveFeedback = (e) => {
+  const onLeaveFeedback = (e) => {
     const value = e.target.innerText;
-    this.setState((prevState) => ({
-      [value]: prevState[value] + 1,
-    }));
-
-    this.countTotalFeedback();
-    this.countPositiveFeedbackPercentage();
+    switch (value) {
+      case "good":
+        setGood(good + 1);
+        break;
+      case "neutral":
+        setNeutral(neutral + 1);
+        break;
+      case "bad":
+        setBad(bad + 1);
+        break;
+      default:
+        return;
+    }
+    countTotalFeedback();
+    countPositiveFeedbackPercentage();
   };
 
-  countPositiveFeedbackPercentage = () => {
-    this.setState((prevState) => ({
-      positivePercentage: Math.round((prevState.good * 100) / prevState.total),
-    }));
+  const countPositiveFeedbackPercentage = () => {
+    setPositivePercentage(Math.round((good * 100) / total));
+
     console.log();
   };
 
-  countTotalFeedback = () => {
-    this.setState((prevState) => ({
-      total: prevState.total + 1,
-    }));
+  const countTotalFeedback = () => {
+    setTotal(total + 1);
   };
 
-  render() {
-    return (
-      <div>
-        <Section title={"Please leave feedback"}>
-          <FeedbackOptions
-            options={["good", "neutral", "bad"]}
-            onLeaveFeedback={this.onLeaveFeedback}
+  return (
+    <div>
+      <Section title={"Please leave feedback"}>
+        <FeedbackOptions
+          options={["good", "neutral", "bad"]}
+          onLeaveFeedback={onLeaveFeedback}
+        />
+      </Section>
+
+      {total > 0 ? (
+        <Section title={"Statistics"}>
+          <Statistics
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={total}
+            positivePercentage={positivePercentage}
           />
         </Section>
-
-        {this.state.total > 0 ? (
-          <Section title={"Statistics"}>
-            <Statistics
-              good={this.state.good}
-              neutral={this.state.neutral}
-              bad={this.state.bad}
-              total={this.state.total}
-              positivePercentage={this.state.positivePercentage}
-            />
-          </Section>
-        ) : (
-          <Notification message={"No feedback given"} />
-        )}
-      </div>
-    );
-  }
+      ) : (
+        <Notification message={"No feedback given"} />
+      )}
+    </div>
+  );
 }
 
 export default FeedbackWidget;
